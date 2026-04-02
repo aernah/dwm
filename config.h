@@ -10,7 +10,7 @@ static const unsigned int gappov    = 10;       /* vert outer gap between window
 static       int smartgaps          = 0;        /* 1 means no outer gap when there is only one window */
 static const int showbar            = 1;        /* 0 means no bar */
 static  int topbar                  = 1;        /* 0 means bottom bar */
-static const char *fonts[]          = { "monospace:size=13"}; 
+static const char *fonts[]          = { "Maple Mono NF CN:size=13"}; 
 static char dmenufont[]       = "Maple Mono:size=16";
 
 static char normbgcolor[]       = "#2e3440";
@@ -26,7 +26,7 @@ static char *colors[][3]      = {
 	[SchemeSel]  = { selbgcolor,  selfgcolor,  selbordercolor  },
 		/* for bar --> {text, background, null} */
 	[SchemeStatus]  = { normfgcolor, normbgcolor,  normbgcolor  }, /* status R */
-	[SchemeTagsSel]  = { normfgcolor, normbgcolor,  normbgcolor  }, /* tag L selected */
+	[SchemeTagsSel]  = { normbgcolor, normfgcolor,  normbgcolor  }, /* tag L selected */
 	[SchemeTagsNorm]  = { selbordercolor, normbgcolor,  normbgcolor  }, /* tag L unselected */
 	[SchemeInfoSel]  = { selfgcolor, normfgcolor,  normbgcolor  }, /* info M selected */
 	[SchemeInfoNorm]  = { normfgcolor, normbgcolor,  normbgcolor  }, /* info M unselected */
@@ -89,7 +89,7 @@ static const Layout layouts[] = {
 #define SHCMD(cmd) { .v = (const char*[]){ "/bin/sh", "-c", cmd, NULL } }
 
 #define STATUSBAR "dwmblocks"
-#define BROWSER "librewolf"
+#define BROWSER "librewolf-bin"
 
 /* commands */
 static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
@@ -162,7 +162,12 @@ static const Key keys[] = {
 	{ MODKEY,				XK_F12,    spawn,       SHCMD("playerctl -p mpd next") },
 	{ MODKEY,				XK_F11,    spawn,       SHCMD("playerctl -p mpd play-pause") },
 	{ MODKEY,				XK_F10,    spawn,       SHCMD("playerctl -p mpv play-pause") },
-    { MODKEY,				XK_F8,     spawn,       SHCMD("slock") },
+        { MODKEY,				XK_F8,     spawn,       SHCMD("slock") },
+        { MODKEY,				XK_v,     spawn,       SHCMD("pavucontrol") },
+	{ MODKEY|ShiftMask,		        XK_n,      spawn,       {.v = (const char*[]){ "notes", NULL } } },
+	{ MODKEY|ShiftMask,		        XK_d,      spawn,       {.v = (const char*[]){ "sys", NULL } } },
+	{ MODKEY|ShiftMask,		        XK_h,      spawn,       {.v = (const char*[]){ "clipboard", NULL } } },
+
 };
 
 /* button definitions */
