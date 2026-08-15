@@ -1,35 +1,38 @@
 /* See LICENSE file for copyright and license details. */
 
 /* appearance */
+static const int vertpad     = 5;       /* vertical padding of bar */
+static const int sidepad     = 5;       /* horizontal padding of bar */
 static const unsigned int borderpx  = 2;        /* border pixel of windows */
 static const unsigned int snap      = 32;       /* snap pixel */
-static const unsigned int gappih    = 10;       /* horiz inner gap between windows */
-static const unsigned int gappiv    = 10;       /* vert inner gap between windows */
-static const unsigned int gappoh    = 10;       /* horiz outer gap between windows and screen edge */
-static const unsigned int gappov    = 10;       /* vert outer gap between windows and screen edge */
+static const unsigned int gappih    = 5;       /* horiz inner gap between windows */
+static const unsigned int gappiv    = 5;       /* vert inner gap between windows */
+static const unsigned int gappoh    = 5;       /* horiz outer gap between windows and screen edge */
+static const unsigned int gappov    = 5;       /* vert outer gap between windows and screen edge */
 static       int smartgaps          = 0;        /* 1 means no outer gap when there is only one window */
 static const int showbar            = 1;        /* 0 means no bar */
 static  int topbar                  = 1;        /* 0 means bottom bar */
-static const char *fonts[]          = { "Maple Mono NF CN:size=13"}; 
-static char dmenufont[]       = "Maple Mono:size=16";
+static const char *fonts[]          = { "Maple Mono NF CN:size=10", "D2Coding Nerd Font:size=10"}; 
+static char dmenufont[]       = "Maple Mono NF CN:size=10";
 
-static char normbgcolor[]       = "#2e3440";
-static char normbordercolor[]   = "#4c566a";
-static char normfgcolor[]       = "#d8dee9";
-static char selfgcolor[]        = "#eceff4";
-static char selbordercolor[]    = "#a3be8c";
-static char selbgcolor[]        = "#b48ead";
+
+static char normbgcolor[]       = "#0a0a0a";
+static char normbordercolor[]   = "#1a1a1a";
+static char normfgcolor[]       = "#6a6a6a";
+static char selfgcolor[]        = "#a8a8a8";
+static char selbordercolor[]    = "#C2185B"; /* Heavily desaturated, earthy red */
+static char selbgcolor[]        = "#C2185B"; /* Dark, near-charcoal red */
 
 static char *colors[][3]      = {
-	/*               fg         bg         border   */
+    /*                  fg         bg         border   */
     [SchemeNorm] = { normfgcolor, normbgcolor, normbordercolor },
-	[SchemeSel]  = { selbgcolor,  selfgcolor,  selbordercolor  },
-		/* for bar --> {text, background, null} */
-	[SchemeStatus]  = { normfgcolor, normbgcolor,  normbgcolor  }, /* status R */
-	[SchemeTagsSel]  = { normbgcolor, normfgcolor,  normbgcolor  }, /* tag L selected */
-	[SchemeTagsNorm]  = { selbordercolor, normbgcolor,  normbgcolor  }, /* tag L unselected */
-	[SchemeInfoSel]  = { selfgcolor, normfgcolor,  normbgcolor  }, /* info M selected */
-	[SchemeInfoNorm]  = { normfgcolor, normbgcolor,  normbgcolor  }, /* info M unselected */
+    [SchemeSel]  = { selfgcolor,  selbgcolor,  selbordercolor  },
+        /* for bar --> {text, background, null} */
+    [SchemeStatus]  = { normfgcolor, normbgcolor,  normbgcolor  }, /* status R */
+    [SchemeTagsSel]  = { selfgcolor,  selbgcolor,  selbordercolor }, /* tag L selected (Muted) */
+    [SchemeTagsNorm]  = { normfgcolor, normbgcolor,  normbgcolor  }, /* tag L unselected (Grey) */
+    [SchemeInfoSel]  = { normbgcolor,  selbgcolor,  normbgcolor  }, /* info M selected (Muted bg) */
+    [SchemeInfoNorm]  = { normfgcolor, normbgcolor,  normbgcolor  }, /* info M unselected */
 };
 
 /* tagging */
@@ -45,6 +48,9 @@ static const Rule rules[] = {
 	{ "librewolf",NULL,       NULL,       1 << 1,       0,           -1 },
 	{ "steam",    NULL,       NULL,       1 << 2,       0,           -1 }, 
     { "discord",  NULL,       NULL,       1 << 4,       0,           -1 },
+    { "keepassxc",NULL,       NULL,       0,            1,           -1 },
+    { "st-notes", NULL,       NULL,       0,            1,           -1 },
+    { "Anki",     NULL,       NULL,       0,            1,           -1 },
 
 };
 
@@ -95,7 +101,9 @@ static const Layout layouts[] = {
 static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
 static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", normbgcolor, "-nf", normfgcolor, "-sb", selbordercolor, "-sf", selfgcolor, NULL };
 static const char *termcmd[]  = { "st", NULL };
-static const char *prtscrcmd[] = { "flameshot", "gui", NULL};
+static const char *prtscrcmd[] = { "flameshot", "gui", "-p", "/home/aerna/Documents/screenshot", NULL};
+static const char *freetubecmd[] = { "flatpak", "run", "io.freetubeapp.FreeTube", NULL };
+static const char *ankicmd[]  = { "flatpak", "run", "net.ankiweb.Anki", NULL };
 
 static const Key keys[] = {
 	/* modifier                     key        function        argument */
@@ -105,7 +113,7 @@ static const Key keys[] = {
 	{ MODKEY,                       XK_j,      focusstack,     {.i = +1 } },
 	{ MODKEY,                       XK_k,      focusstack,     {.i = -1 } },
 	{ MODKEY,                       XK_i,      incnmaster,     {.i = +1 } },
-	{ MODKEY,                       XK_d,      incnmaster,     {.i = -1 } },
+	{ MODKEY,                       XK_o,      incnmaster,     {.i = -1 } },
 	{ MODKEY,                       XK_h,      setmfact,       {.f = -0.05} },
 	{ MODKEY,                       XK_l,      setmfact,       {.f = +0.05} },
 	{ MODKEY,                       XK_z,      zoom,           {0} },
@@ -113,7 +121,7 @@ static const Key keys[] = {
 	{ MODKEY,                       XK_q,      killclient,     {0} },
 	{ MODKEY,	                    XK_F5,     xrdb,	       {.v = NULL } },
 	{ MODKEY,                       XK_t,      setlayout,      {.v = &layouts[0]} },
-	{ MODKEY,                       XK_s,      setlayout,      {.v = &layouts[1]} },
+	{ MODKEY,                       XK_f,      setlayout,      {.v = &layouts[1]} },
 	{ MODKEY,                       XK_k,      setlayout,      {.v = &layouts[2]} },
 	{ MODKEY|ShiftMask,             XK_space,  setlayout,      {0} },
 	{ MODKEY|ShiftMask,             XK_f,      togglefloating, {0} },
@@ -156,7 +164,11 @@ static const Key keys[] = {
 	/* app binds */
 	{ MODKEY,			    XK_m,      spawn,      {.v = (const char*[]){ "st", "-e", "rmpc", NULL } } },
 	{ MODKEY,		     	XK_w,      spawn,      {.v = (const char*[]){ BROWSER, NULL } } },
-    { 0, XK_Print, spawn, {.v = prtscrcmd } },
+	{ MODKEY,		     	XK_d,      spawn,      {.v = (const char*[]){ "discord", NULL } } },
+	{ MODKEY,		     	XK_s,      spawn,      {.v = (const char*[]){ "steam", NULL } } },
+	{ MODKEY,               XK_a,      spawn,      {.v = ankicmd } },
+	{ MODKEY,               XK_y,      spawn,      {.v = freetubecmd } },
+    { 0,                    XK_Print,  spawn,      {.v = prtscrcmd } },
 
   /* other bindings */
 	{ MODKEY,				XK_F12,    spawn,       SHCMD("playerctl -p mpd next") },
@@ -167,6 +179,7 @@ static const Key keys[] = {
 	{ MODKEY|ShiftMask,		        XK_n,      spawn,       {.v = (const char*[]){ "notes", NULL } } },
 	{ MODKEY|ShiftMask,		        XK_d,      spawn,       {.v = (const char*[]){ "sys", NULL } } },
 	{ MODKEY|ShiftMask,		        XK_h,      spawn,       {.v = (const char*[]){ "clipboard", NULL } } },
+	{ MODKEY|ShiftMask,		        XK_b,      spawn,       {.v = (const char*[]){ "bookmarks", NULL } } },
 
 };
 
