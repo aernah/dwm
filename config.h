@@ -3,13 +3,13 @@
 /* appearance */
 static const int vertpad     = 5;       /* vertical padding of bar */
 static const int sidepad     = 5;       /* horizontal padding of bar */
-static const unsigned int borderpx  = 2;        /* border pixel of windows */
+static const unsigned int borderpx  = 0;        /* border pixel of windows */
 static const unsigned int snap      = 32;       /* snap pixel */
 static const unsigned int gappih    = 5;       /* horiz inner gap between windows */
 static const unsigned int gappiv    = 5;       /* vert inner gap between windows */
 static const unsigned int gappoh    = 5;       /* horiz outer gap between windows and screen edge */
 static const unsigned int gappov    = 5;       /* vert outer gap between windows and screen edge */
-static       int smartgaps          = 0;        /* 1 means no outer gap when there is only one window */
+static       int smartgaps          = 1;        /* 1 means no outer gap when there is only one window */
 static const int showbar            = 1;        /* 0 means no bar */
 static  int topbar                  = 1;        /* 0 means bottom bar */
 static const char *fonts[]          = { "Maple Mono NF CN:size=10", "D2Coding Nerd Font:size=10"}; 
@@ -95,12 +95,13 @@ static const Layout layouts[] = {
 #define SHCMD(cmd) { .v = (const char*[]){ "/bin/sh", "-c", cmd, NULL } }
 
 #define STATUSBAR "dwmblocks"
-#define BROWSER "librewolf-bin"
 
 /* commands */
 static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
 static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", normbgcolor, "-nf", normfgcolor, "-sb", selbordercolor, "-sf", selfgcolor, NULL };
 static const char *termcmd[]  = { "st", NULL };
+static const char *librewolfcmd[] = { "librewolf-bin", "-P", "default-default", NULL };
+static const char *librewolffcmd[] = { "librewolf-bin", "-P", "default", NULL };
 static const char *prtscrcmd[] = { "flameshot", "gui", "-p", "/home/aerna/Documents/screenshot", NULL};
 static const char *freetubecmd[] = { "flatpak", "run", "io.freetubeapp.FreeTube", NULL };
 static const char *ankicmd[]  = { "flatpak", "run", "net.ankiweb.Anki", NULL };
@@ -163,7 +164,8 @@ static const Key keys[] = {
 
 	/* app binds */
 	{ MODKEY,			    XK_m,      spawn,      {.v = (const char*[]){ "st", "-e", "rmpc", NULL } } },
-	{ MODKEY,		     	XK_w,      spawn,      {.v = (const char*[]){ BROWSER, NULL } } },
+	{ MODKEY,		     	XK_w,      spawn,      {.v = librewolfcmd } },
+	{ MODKEY,		     	XK_e,      spawn,      {.v = librewolffcmd } },
 	{ MODKEY,		     	XK_d,      spawn,      {.v = (const char*[]){ "discord", NULL } } },
 	{ MODKEY,		     	XK_s,      spawn,      {.v = (const char*[]){ "steam", NULL } } },
 	{ MODKEY,               XK_a,      spawn,      {.v = ankicmd } },
@@ -174,9 +176,9 @@ static const Key keys[] = {
 	{ MODKEY,				XK_F12,    spawn,       SHCMD("playerctl -p mpd next") },
 	{ MODKEY,				XK_F11,    spawn,       SHCMD("playerctl -p mpd play-pause") },
 	{ MODKEY,				XK_F10,    spawn,       SHCMD("playerctl -p mpv play-pause") },
-        { MODKEY,				XK_F8,     spawn,       SHCMD("slock") },
-        { MODKEY,				XK_v,     spawn,       SHCMD("pavucontrol") },
-	{ MODKEY|ShiftMask,		        XK_n,      spawn,       {.v = (const char*[]){ "notes", NULL } } },
+	{ MODKEY,				XK_F8,     spawn,       SHCMD("slock") },
+	{ MODKEY,				XK_v,     spawn,       SHCMD("pavucontrol") },
+	{ MODKEY,		                XK_n,      spawn,       {.v = (const char*[]){ "notes", NULL } } },
 	{ MODKEY|ShiftMask,		        XK_d,      spawn,       {.v = (const char*[]){ "sys", NULL } } },
 	{ MODKEY|ShiftMask,		        XK_h,      spawn,       {.v = (const char*[]){ "clipboard", NULL } } },
 	{ MODKEY|ShiftMask,		        XK_b,      spawn,       {.v = (const char*[]){ "bookmarks", NULL } } },
